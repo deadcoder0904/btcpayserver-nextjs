@@ -13,6 +13,16 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
   const req = await request.json()
   console.info('🏁 POST /api/btcpayserver/checkout/route')
 
+  if (
+    typeof BASE_URL === 'undefined' ||
+    typeof EBOOK_PRICE === 'undefined' ||
+    typeof BTCPAY_API_KEY === 'undefined' ||
+    typeof BTCPAY_STORE_ID === 'undefined' ||
+    typeof BTCPAY_URL === 'undefined'
+  ) {
+    throw new Error('Env variables are not defined')
+  }
+
   const btcpayserverSchema = object({
     email: string([email()]),
   })
@@ -21,6 +31,7 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
 
   const project_name = 'BTC Ebook'
   const amount = ((EBOOK_PRICE || 97) as number) - 20
+  const currency = 'USD'
 
   try {
     const { email } = parse(btcpayserverSchema, req)
@@ -29,7 +40,6 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
       orderId: createId(),
       project_name,
       buyerEmail: email,
-      amount,
     }
 
     const response = await fetch(
@@ -48,7 +58,7 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
         body: JSON.stringify({
           amount,
           email,
-          currency: 'USD',
+          currency,
           metadata,
           checkout: { redirectURL },
         }),

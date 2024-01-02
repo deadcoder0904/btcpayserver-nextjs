@@ -6,7 +6,7 @@ if (isBrowser()) {
   )
 }
 
-export const BTCPAY_URL = process.env['BTCPAY_URL']
-export const BTCPAY_STORE_ID = process.env['BTCPAY_STORE_ID']
-export const BTCPAY_WEBHOOK_SECRET = process.env['BTCPAY_WEBHOOK_SECRET']
-export const BTCPAY_API_KEY = process.env['BTCPAY_API_KEY']
+export const BTCPAY_URL = process.env.BTCPAY_URL as string
+export const BTCPAY_STORE_ID = process.env.BTCPAY_STORE_ID as string
+export const BTCPAY_WEBHOOK_SECRET = process.env.BTCPAY_WEBHOOK_SECRET as string
+export const BTCPAY_API_KEY = process.env.BTCPAY_API_KEY as string

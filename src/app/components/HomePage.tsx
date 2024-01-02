@@ -12,7 +12,7 @@ export const HomePage = () => {
       return
     }
 
-    const response = await fetch('/api/btcpayserver/checkout', {
+    const response = await fetch(`/api/btcpayserver/checkout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,11 +29,14 @@ export const HomePage = () => {
 
   return (
     <div className="m-2">
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <h1 className="block text-2xl font-bold leading-9 text-amber-500 mb-2">
+        BTCPayServer + Next.js Demo
+      </h1>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium leading-6 text-white"
+            className="block text-lg font-medium leading-6 text-white"
           >
             Email address
           </label>
@@ -43,12 +46,15 @@ export const HomePage = () => {
               name="email"
               type="email"
               autoComplete="email"
+              className="border border-white text-md py-2 px-2 w-64"
               required
             />
           </div>
         </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" className="border border-white p-2 w-64">
+          Submit
+        </button>
       </form>
     </div>
   )

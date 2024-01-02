@@ -2,7 +2,12 @@ import crypto from 'crypto'
 import { error } from 'next/dist/build/output/log'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { BTCPAY_WEBHOOK_SECRET } from '@/app/lib/env/server'
+import {
+  BTCPAY_API_KEY,
+  BTCPAY_STORE_ID,
+  BTCPAY_URL,
+  BTCPAY_WEBHOOK_SECRET,
+} from '@/app/lib/env/server'
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
   const body = await req.text()
@@ -40,15 +45,35 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
   try {
     const event = JSON.parse(body)
-    console.log({ event })
-    // Handle the event
+    const BTCPAY_INVOICE_ID = event.invoiceId
+
+    const response = await fetch(
+      `${BTCPAY_URL}/stores/${BTCPAY_STORE_ID}/invoices/${BTCPAY_INVOICE_ID}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `token ${BTCPAY_API_KEY}`,
+        },
+      }
+    )
+
+    const { metadata } = await response.json()
+
     switch (event.type) {
       case 'InvoicePaymentSettled':
-        // add ebook price to database
-        const email = ''
+        console.log({ metadata })
+
+        const { buyerEmail } = metadata
+        const cryptoCurrency = event.paymentMethod
+        const cryptoPayment = event.payment.value
+        const cryptoFees = event.payment.fee
+
         try {
-          // create user here
-          console.info({ email }, `[BTCPayServer] 💰 Successfully charged`)
+          // create user here with info from `metadata`
+          console.info(
+            `[BTCPayServer] 💰 Successfully charged ${buyerEmail} with ${cryptoPayment} ${cryptoCurrency} & ${cryptoFees} fees`
+          )
         } catch (error) {
           console.error(
             error,
@@ -56,13 +81,9 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           )
         }
         break
-      case 'InvoicePaymentFailed':
-        // don't do anything but return an error to customer
-        console.log({ event })
-        break
       default:
         // Unexpected event type
-        console.warn(event.type, `🤷‍♀️ Unhandled event type`)
+        console.warn(`[BTCPayServer] Unhandled event type ${event.type} 🤷‍♀️`)
         break
     }
   } catch (err) {

@@ -2,13 +2,15 @@
 
 ## Usage
 
+Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/).
+
 Use [clovyr.app](https://clovyr.app/)'s free plan (7-day free trial) for [testing BTCPayServer](https://clovyr.app/apps/btcpayserver).
 
 After testing, you can use Lunanode or [Voltage Cloud's hosted BTCPayServer](https://www.youtube.com/playlist?list=PLuMtKGSqizH2sxmKdy52gdbqSVKkyLX-t) Plan for $8/month or buy a VPS from Kyun Host ($16/month) to self-host it yourself using [btcpayserver-docker](https://github.com/btcpayserver/btcpayserver-docker).
 
-Use [Sparrow Wallet](https://bitcoiner.guide/sparrow/) to test Bitcoin Payments using [testnet](https://www.youtube.com/watch?v=7JJkLW4SHKQ).
+Use [Sparrow Wallet](https://bitcoiner.guide/sparrow/) to test Bitcoin Payments using [testnet](https://www.youtube.com/watch?v=7JJkLW4SHKQ) with [bitcoin testnet faucet](https://coinfaucet.eu/en/btc-testnet/).
 
-### .env
+### .env.development
 
 ```bash
 NODE_ENV=development
@@ -29,6 +31,6 @@ NEXT_PUBLIC_EBOOK_PRICE=57
 NEXT_TELEMETRY_DISABLED=1
 ```
 
-Run `pnpm dev` in one terminal and `pnpm ngrok:listen` in another terminal. `ngrok` is needed for webhooks as webhooks don't work on http, they need https.
+Run `pnpm dev` (or `pnpm turbo`) in one terminal and `pnpm ngrok:listen` in another terminal. `ngrok` is needed for webhooks as webhooks don't work on http, they need https.
 
 > Make sure to set up [ngrok](https://ngrok.com) with [static domain](https://ngrok.com/blog-post/free-static-domains-ngrok-users).
