@@ -30,7 +30,7 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
   const redirectURL = `${BASE_URL}/payment/successful`
 
   const project_name = 'BTC Ebook'
-  const amount = ((EBOOK_PRICE || 97) as number) - 20
+  const amount = Number(EBOOK_PRICE)
   const currency = 'USD'
 
   try {
@@ -66,7 +66,7 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
     )
 
     const session = await response.json()
-    console.log({ session })
+    console.log(JSON.stringify({ session }, null, 2))
     console.info(`[BTCPayServer] ✅ Successfully created Checkout Page!`)
     return NextResponse.json({ success: true, url: session.checkoutLink })
   } catch (error) {

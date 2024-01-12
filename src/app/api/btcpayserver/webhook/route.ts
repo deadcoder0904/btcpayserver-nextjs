@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import { error } from 'next/dist/build/output/log'
 import { NextRequest, NextResponse } from 'next/server'
 
 import {
@@ -36,19 +35,17 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     }
 
     console.info(`[BTCPayServer] Listening to Webhook Event!`)
-  } catch (err) {
-    error(err as string)
-    return new Response(`Webhook Error: ${(err as Error).message}`, {
-      status: 400,
-    })
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 400 })
   }
 
   try {
     const event = JSON.parse(body)
+
     const BTCPAY_INVOICE_ID = event.invoiceId
 
     const response = await fetch(
-      `${BTCPAY_URL}/stores/${BTCPAY_STORE_ID}/invoices/${BTCPAY_INVOICE_ID}`,
+      `${BTCPAY_URL}/stores/${BTCPAY_STORE_ID}/invoices/${BTCPAY_INVOICE_ID}/payment-methods`,
       {
         method: 'GET',
         headers: {
@@ -58,16 +55,25 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       }
     )
 
-    const { metadata } = await response.json()
+    const result = await response.json()
+
+    console.warn(`[BTCPayServer] 🧨 ${event.type} 🧨`)
 
     switch (event.type) {
-      case 'InvoicePaymentSettled':
-        console.log({ metadata })
+      case 'InvoiceSettled':
+        const { buyerEmail } = event.metadata
+        const cryptoCurrency = result[0].cryptoCode
 
-        const { buyerEmail } = metadata
-        const cryptoCurrency = event.paymentMethod
-        const cryptoPayment = event.payment.value
-        const cryptoFees = event.payment.fee
+        type Crypto = { totalPaid: number; networkFee: number }
+
+        const cryptoPayment = result.reduce(
+          (acc: number, crypto: Crypto) => acc + Number(crypto.totalPaid),
+          0
+        )
+        const cryptoFees = result.reduce(
+          (acc: number, crypto: Crypto) => acc + Number(crypto.networkFee),
+          0
+        )
 
         try {
           // create user here with info from `metadata`
@@ -88,9 +94,10 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     }
   } catch (err) {
     console.error({ err }, `[BTCPayServer] Webhook Error`)
-    return new Response('Webhook handler failed. View logs.', {
-      status: 400,
-    })
+    return NextResponse.json(
+      { error: 'Webhook handler failed. View logs.' },
+      { status: 400 }
+    )
   }
 
   console.info(`[BTCPayServer] Successfully ran Webhook!`)

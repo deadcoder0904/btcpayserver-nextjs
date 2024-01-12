@@ -4,7 +4,7 @@
 
 Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/).
 
-Use [clovyr.app](https://clovyr.app/)'s free plan (7-day free trial) for [testing BTCPayServer](https://clovyr.app/apps/btcpayserver).
+Use [clovyr.app](https://clovyr.app/)'s free plan (7-day free trial) for [testing BTCPayServer](https://clovyr.app/apps/btcpayserver). Or maybe don't as Clovyr doesn't update BTCPayServer often. Use Voltage Cloud only even for testing because I had a webhook error as Clovyr was using old BTCPayServer version. Or use [kyun host](https://kyun.host) to deploy your own BTCPayServer on a Linux VPS for $15/month.
 
 After testing, you can use Lunanode or [Voltage Cloud's hosted BTCPayServer](https://www.youtube.com/playlist?list=PLuMtKGSqizH2sxmKdy52gdbqSVKkyLX-t) Plan for $8/month or buy a VPS from Kyun Host ($16/month) to self-host it yourself using [btcpayserver-docker](https://github.com/btcpayserver/btcpayserver-docker).
 
@@ -26,7 +26,7 @@ BTCPAY_STORE_ID=xxxx
 # Under `Settings > Store Settings > Webhooks` => Payload URL = http://localhost:3000/api/btcpayserver/webhook (replace http://localhost:3000 with ngrok url as localhost (specifically, http) won't work with webhooks) & Events > Send Me Everything
 BTCPAY_WEBHOOK_SECRET=xxxx
 
-NEXT_PUBLIC_EBOOK_PRICE=57
+NEXT_PUBLIC_EBOOK_PRICE=107
 
 NEXT_TELEMETRY_DISABLED=1
 ```

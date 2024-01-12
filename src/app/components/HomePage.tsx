@@ -1,5 +1,7 @@
 'use client'
 
+import { EBOOK_PRICE } from '@/app/lib/constants'
+
 export const HomePage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -53,7 +55,7 @@ export const HomePage = () => {
         </div>
 
         <button type="submit" className="border border-white p-2 w-64">
-          Submit
+          Buy for ${EBOOK_PRICE}
         </button>
       </form>
     </div>
